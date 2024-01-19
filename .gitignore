@@ -1,3 +1,4 @@
+.env.real
 pwd.txt
 *.csv
 config.yml

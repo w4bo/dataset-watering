@@ -17,3 +17,4 @@ jobs:
           ./init.sh
           ./download.sh
           docker compose up
+          jupyter nbconvert --to notebook --execute extract.ipynb
