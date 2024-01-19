@@ -17,6 +17,10 @@ jobs:
           chmod +x *.sh
           ./init.sh
           ./download.sh
+          cd data
+          python red_data.py
+          rm watering-forecasting-20240119.sql
+          mv watering-forecasting-20240119-red.sql watering-forecasting-20240119.sql
           ./start.sh
       - name: Execute
         run: |
