@@ -20,4 +20,5 @@ jobs:
           ./start.sh
       - name: Execute
         run: |
+          pip install -r requirements.txt
           jupyter nbconvert --to notebook --execute extract.ipynb
