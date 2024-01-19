@@ -14,6 +14,7 @@ jobs:
           python-version: '3.12' 
       - name: Run docker
         run: |
+          chmod +x *.sh
           ./init.sh
           ./download.sh
           docker compose up
