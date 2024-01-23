@@ -5,11 +5,21 @@ from sqlalchemy import create_engine
 from dotenv import dotenv_values
 config = dotenv_values(".env")
 
+standard_tables = {
+    "dt_field": {"col": ["field", "province", "region", "country"]},
+    "dt_time": {"col": ["timestamp", "datetime", "hour", "date", "month", "year"]},
+    "dt_agent": {"col": ["agent", "agentType", "agentHier"]},
+    "ft_measurement": {"col": ["agent", "type", "field", "owner", "project", "timestamp", "value", "delay"]},
+}
+
+def get_tables():
+    return dict(standard_tables)
+
 def get_columns(tables):
     return list(set([item for sublist in [c["col"] + (c["json"] if "json" in c else []) for c in tables.values()] for item in sublist]))
 
 def row_to_json(row):
-    row = {key: value for key, value in row.to_dict().items() if not pd.isna(value)}
+    row = {key: value for key, value in row.to_dict().items() if not pd.isna(value) and value is not None}
     return json.dumps(row)
 
 def compute_json(df, df_all, cols):
@@ -20,7 +30,7 @@ def compute_json(df, df_all, cols):
     if jso == []:
         df["rawJSON"] = json.dumps({})
     else:
-        df["rawJSON"] = df_all[jso].apply(lambda row: row_to_json(row), axis=1)
+        df["rawJSON"] = df_all[list(set(jso) & set(list(df_all.columns)))].apply(lambda row: row_to_json(row), axis=1)
     return df
 
 def extend_df(sdf, owner, project):
@@ -38,27 +48,28 @@ def extend_df(sdf, owner, project):
     sdf["country"] = "IT"
     sdf["owner"] = owner
     sdf["project"] = project
-    sdf["agent"] = sdf.apply(lambda x: get_agent(x["type"], x), axis=1)
-    sdf["agentType"] = sdf.apply(lambda x: get_agenttype(x["type"], x), axis=1)
-    sdf["type-ext"] = sdf.apply(lambda x: get_meastype(x["type"], x), axis=1)
+    sdf["agentType"] = sdf.apply(lambda x: get_agent_type(x["type"], x), axis=1)
+    sdf["agent"] = sdf.apply(lambda x: x["agentType"] + "-" + x["field"].split('-')[1], axis=1)
+    sdf["agentHier"] = sdf.apply(lambda x: get_agent_hier(x["type"], x), axis=1)
+    sdf["type-ext"] = sdf.apply(lambda x: get_meas_type(x["type"], x), axis=1)
 
-def get_agent(s, x):
+def get_agent_type(s, x):
     if s == "DRIPPER":
         return "Dripper"
     elif s in ["GROUND_WATER_POTENTIAL", "GRND_WATER_G", "GROUND_SATURATION_DEGREE"]:
-        return "sensor-({},{},{})".format(x["x"], x["y"], x["z"]).replace("nan", "0").replace(".0", "")
+        return "Sensor-({},{},{})".format(x["x"], x["y"], x["z"]).replace("nan", "0").replace(".0", "")
     elif s in ["SOLAR_RAD", "AIR_HUM", "WIND_DIRECTION", "AIR_TEMP", "WIND_GUST_MAX", "PLUV_CURR", "WIND_SPEED"]:
         return "WeatherStation"
     else:
         return s
     
-def get_agenttype(s, x):
+def get_agent_hier(s, x):
     if s in ["ETC", "BIG", "ET0"]:
         return "Process"
     else:
         return "AssignedDevice"
 
-def get_meastype(s, x):
+def get_meas_type(s, x):
     if s in ["GROUND_WATER_POTENTIAL", "GRND_WATER_G", "GROUND_SATURATION_DEGREE"]:
         return "{}-({},{},{})".format(x["type"], x["x"], x["y"], x["z"]).replace("nan", "0").replace("nan", "0").replace(".0", "")
     else:
