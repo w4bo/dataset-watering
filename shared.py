@@ -3,6 +3,7 @@ import pandas as pd
 import psycopg2
 from sqlalchemy import create_engine
 from dotenv import dotenv_values
+import numpy as np
 config = dotenv_values(".env")
 
 standard_tables = {
@@ -11,6 +12,30 @@ standard_tables = {
     "dt_agent": {"col": ["agent", "agentType", "agentHier"]},
     "ft_measurement": {"col": ["agent", "type", "field", "owner", "project", "timestamp", "value", "delay"]},
 }
+
+def connect(db_name1):
+    # Connect to PostgreSQL server
+    conn = psycopg2.connect(
+        dbname=db_name1,
+        user=config["OUT_USER"],
+        password=config["OUT_PWD"],
+        host=config["OUT_HOST"],
+        port=config["OUT_PORT"]
+    )
+    conn.autocommit = True
+    return conn
+
+def get_connection(db_params):
+    # Connect to PostgreSQL server
+    conn = psycopg2.connect(
+        dbname=db_params["OUT_DB"],
+        user=db_params["OUT_USER"],
+        password=db_params["OUT_PWD"],
+        host=db_params["OUT_HOST"],
+        port=db_params["OUT_PORT"]
+    )
+    conn.autocommit = True
+    return conn
 
 def get_tables():
     return dict(standard_tables)
@@ -74,3 +99,8 @@ def get_meas_type(s, x):
         return "{}-({},{},{})".format(x["type"], x["x"], x["y"], x["z"]).replace("nan", "0").replace("nan", "0").replace(".0", "")
     else:
         return s
+
+def get_engine(db_params):
+    conn_str = "postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**db_params)
+    print(conn_str)
+    return create_engine(conn_str)
