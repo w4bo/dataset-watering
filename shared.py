@@ -6,24 +6,20 @@ from dotenv import dotenv_values
 import numpy as np
 config = dotenv_values(".env")
 
+db_params = {
+    'host': config["OUT_HOST"],
+    'database': config["OUT_DB"],
+    'user': config["OUT_USER"],
+    'password': config["OUT_PWD"],
+    'port': config["OUT_PORT"]
+}
+
 standard_tables = {
     "dt_field": {"col": ["field", "province", "region", "country"]},
     "dt_time": {"col": ["timestamp", "datetime", "hour", "date", "month", "year"]},
     "dt_agent": {"col": ["agent", "agentType", "agentHier"]},
     "ft_measurement": {"col": ["agent", "type", "field", "owner", "project", "timestamp", "value", "delay"]},
 }
-
-def connect(db_name1):
-    # Connect to PostgreSQL server
-    conn = psycopg2.connect(
-        dbname=db_name1,
-        user=config["OUT_USER"],
-        password=config["OUT_PWD"],
-        host=config["OUT_HOST"],
-        port=config["OUT_PORT"]
-    )
-    conn.autocommit = True
-    return conn
 
 def get_connection(db_params):
     # Connect to PostgreSQL server
