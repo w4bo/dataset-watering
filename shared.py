@@ -6,7 +6,7 @@ from dotenv import dotenv_values
 import numpy as np
 config = dotenv_values(".env")
 
-db_params = {
+out_db_params = {
     'host': config["OUT_HOST"],
     'database': config["OUT_DB"],
     'user': config["OUT_USER"],
