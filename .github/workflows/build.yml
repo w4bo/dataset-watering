@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./datasets
     steps:
       - uses: actions/checkout@v4.1.1
       - uses: actions/setup-python@v5.0.0
@@ -22,3 +25,14 @@ jobs:
         run: |
           pip install -r requirements.txt
           ./run.sh
+      - name: Dump
+        run: |
+          python create_dump_script.py
+          ./dump-clean.sh
+      - name: Release
+        run: |
+          cd .. 
+          npm install
+          npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

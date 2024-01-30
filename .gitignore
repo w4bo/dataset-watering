@@ -1,14 +1,15 @@
 *.twbr
-.env.real
+*.env
+*.env.real
 pwd.txt
+**/config.yml
 *.csv
-config.yml
 *.sql
 *.sqll
-!/data/0init.sql
+!**/0init.sql
 .idea/
 **/src/main/java/it/unibo/antlr/gen/*
-dump.sh
+**/dump*.sh
 
 # Created by https://www.gitignore.io/api/java,scala,linux,macos,python,gradle,kotlin,windows,eclipse,intellij,virtualenv,jupyternotebooks
 # Edit at https://www.gitignore.io/?templates=java,scala,linux,macos,python,gradle,kotlin,windows,eclipse,intellij,virtualenv,jupyternotebooks
