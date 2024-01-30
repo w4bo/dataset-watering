@@ -28,6 +28,7 @@ jobs:
       - name: Dump
         run: |
           python create_dump_script.py
+          chmod +x *.sh
           ./dump-clean.sh
       - name: Release
         run: |
