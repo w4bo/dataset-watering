@@ -1,9 +1,8 @@
-# Use postgres/example user/password credentials
 version: '3.9'
 services:
-  postgis-in:
+  postgis:
     init: true
-    hostname: postgres-in
+    hostname: postgres
     image: postgis/postgis:16-3.4
     restart: always
     environment:
@@ -15,15 +14,15 @@ services:
     volumes:
       - ./data/:/docker-entrypoint-initdb.d/
 
-# postgis-out:
-#   init: true
-#   hostname: postgres-out
-#   image: postgis/postgis:16-3.4
-#   restart: always
-#   environment:
-#     - POSTGRES_USER=root
-#     - POSTGRES_PASSWORD=root
-#     - POSTGRES_DB=dbext
-#   ports:
-#     - '5433:5432'
-# 
+  oracle:
+    hostname: oracle
+    container_name: oracle
+    build: dockerimages/oracle11g
+    environment:
+      - ORACLE_DISABLE_ASYNCH_IO=true
+      - ORACLE_ALLOW_REMOTE=true
+    ports:
+      - "${OUT_ORA1_PORT}:${OUT_ORA1_PORT}"
+      - 5500:5500
+    volumes:
+      - ./data/:/data

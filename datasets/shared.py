@@ -96,7 +96,11 @@ def get_meas_type(s, x):
     else:
         return s
 
-def get_engine(db_params):
-    conn_str = "postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(**db_params)
+def get_engine(db_params, type="postgresql"):
+    conn_str = "://{user}:{password}@{host}:{port}/{database}".format(**db_params)
+    if type == "postgresql":
+        conn_str = "postgresql+psycopg2" + conn_str
+    else:
+        conn_str = "oracle+cx_oracle" + conn_str
     print(conn_str)
     return create_engine(conn_str)
