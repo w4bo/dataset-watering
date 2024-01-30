@@ -1,3 +1,4 @@
 #!/bin/bash
 set -exo
-docker compose up --build
+rm -f resources/.ready
+docker compose up --build -d
