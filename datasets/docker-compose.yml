@@ -2,7 +2,8 @@ version: '3.9'
 services:
   postgis:
     init: true
-    hostname: postgres
+    hostname: postgis
+    container_name: postgis
     image: postgis/postgis:16-3.4
     restart: always
     environment:
@@ -13,6 +14,7 @@ services:
       - '5432:5432'
     volumes:
       - ./data/:/docker-entrypoint-initdb.d/
+      - ./data/:/data
 
   oracle:
     hostname: oracle

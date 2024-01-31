@@ -9,7 +9,8 @@ config.plugins.push(
     }],
     ["@semantic-release/github", {
         "assets": [
-          {"path": "datasets/data/*.sql"}
+          {"path": "datasets/data/*.sql"},
+	  {"path": "datasets/data/*.dmp"}
         ]
     }],
     "@semantic-release/git",

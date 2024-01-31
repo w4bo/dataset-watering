@@ -4,12 +4,13 @@
 pwd.txt
 **/config.yml
 *.csv
+*.dmp
 *.sql
 *.sqll
 !**/0init.sql
 .idea/
 **/src/main/java/it/unibo/antlr/gen/*
-**/dump*.sh
+**/dump-*.sh
 **/libs/*
 !**/libs/.dummy
 !f01_oracle_init.sql
