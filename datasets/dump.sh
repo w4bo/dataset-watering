@@ -1,5 +1,5 @@
 #!/bin/bash
-set -exo
+set -xo
 chmod 755 dump-clean-ora.sh dump-clean-pg.sh
 docker cp dump-clean-ora.sh oracle:/
 docker exec oracle /dump-clean-ora.sh
