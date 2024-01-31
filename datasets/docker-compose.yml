@@ -23,6 +23,5 @@ services:
       - ORACLE_ALLOW_REMOTE=true
     ports:
       - "${OUT_ORA1_PORT}:${OUT_ORA1_PORT}"
-      - 5500:5500
     volumes:
       - ./data/:/data

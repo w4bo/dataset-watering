@@ -13,7 +13,7 @@ pwd.txt
 **/libs/*
 !**/libs/.dummy
 !f01_oracle_init.sql
-!.ready
+.ready
 
 # Created by https://www.gitignore.io/api/java,scala,linux,macos,python,gradle,kotlin,windows,eclipse,intellij,virtualenv,jupyternotebooks
 # Edit at https://www.gitignore.io/?templates=java,scala,linux,macos,python,gradle,kotlin,windows,eclipse,intellij,virtualenv,jupyternotebooks
