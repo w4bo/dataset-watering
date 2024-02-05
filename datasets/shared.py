@@ -56,13 +56,13 @@ def compute_json(df, df_all, cols):
 
 def extend_df(sdf, owner, project):
     sdf["datetime"] = pd.to_datetime(sdf["timestamp"], unit="s")
-    sdf["date"] = pd.to_datetime(sdf["timestamp"], unit="s").dt.date
-    sdf["month"] = pd.to_datetime(sdf["timestamp"], unit="s").dt.month
-    sdf["year"] = pd.to_datetime(sdf["timestamp"], unit="s").dt.year
+    sdf["date"] = sdf["datetime"].dt.date
+    sdf["month"] = sdf["datetime"].dt.month
+    sdf["year"] = sdf["datetime"].dt.year
     sdf["month"] = sdf.apply(lambda x: "{}-{}".format(x["year"], x["month"]), axis=1)
-    sdf["hour"] = pd.to_datetime(sdf["timestamp"], unit="s").dt.hour
+    sdf["hour"] = sdf["datetime"].dt.hour
     sdf["hour"] = sdf.apply(lambda x: "{} {}:00:00".format(x["date"], x["hour"]), axis=1)
-    sdf['week'] = sdf['timestamp'].dt.isocalendar().week
+    sdf['week'] = sdf["datetime"].dt.isocalendar().week
     sdf['week_in_year'] = sdf.apply(lambda x: '{}-{}'.format(x["year"], x["week"]), axis=1)
     sdf["timestampReceived"] = sdf["timestamp"]
     sdf["delay"] = sdf["timestampReceived"] - sdf["timestamp"] 
