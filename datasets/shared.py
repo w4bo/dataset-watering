@@ -16,7 +16,7 @@ out_db_params = {
 
 standard_tables = {
     "dt_field": {"col": ["field", "province", "region", "country"]},
-    "dt_time": {"col": ["timestamp", "datetime", "hour", "date", "month", "year"]},
+    "dt_time": {"col": ["timestamp", "datetime", "hour", "date", "month", "year", "week", "week_in_year"]},
     "dt_agent": {"col": ["agent", "agentType", "agentHier"]},
     "ft_measurement": {"col": ["agent", "type", "field", "owner", "project", "timestamp", "value", "delay"]},
 }
@@ -62,6 +62,8 @@ def extend_df(sdf, owner, project):
     sdf["month"] = sdf.apply(lambda x: "{}-{}".format(x["year"], x["month"]), axis=1)
     sdf["hour"] = pd.to_datetime(sdf["timestamp"], unit="s").dt.hour
     sdf["hour"] = sdf.apply(lambda x: "{} {}:00:00".format(x["date"], x["hour"]), axis=1)
+    sdf['week'] = sdf['timestamp'].dt.isocalendar().week
+    sdf['week_in_year'] = sdf.apply(lambda x: '{}-{}'.format(x["year"], x["week"]), axis=1)
     sdf["timestampReceived"] = sdf["timestamp"]
     sdf["delay"] = sdf["timestampReceived"] - sdf["timestamp"] 
     sdf["province"] = "FE"
