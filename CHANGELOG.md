@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/w4bo/watering-dataset/compare/1.0.0...1.0.1) (2024-01-31)
+
+
+### Bug Fixes
+
+* **ci:** change permissions of datasets ([3ab439d](https://github.com/w4bo/watering-dataset/commit/3ab439dd4a3e7595fb22c07422820d5c35f38a81))
+
 ## 1.0.0 (2024-01-31)
 
 
