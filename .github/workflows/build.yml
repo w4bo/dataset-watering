@@ -24,6 +24,9 @@ jobs:
       - name: Execute
         run: |
           pip install -r requirements.txt
+          cd data
+          unzip cimice-dataset-2024-03-11.zip
+          cd -
           ./run.sh
       - name: Dump
         run: |

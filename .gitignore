@@ -5,6 +5,7 @@ pwd.txt
 **/config.yml
 *.csv
 *.dmp
+*.json
 *.sql
 *.sqll
 !**/0init.sql
