@@ -1,0 +1,6 @@
+[submodule "covid-dataset"]
+	path = covid-dataset
+	url = git@github.com:w4bo/covid-dataset.git
+[submodule "dataset-salespurchase"]
+	path = dataset-salespurchase
+	url = git@github.com:w4bo/dataset-salespurchase.git
