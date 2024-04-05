@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/w4bo/dataset-watering/compare/1.0.4...1.0.5) (2024-04-05)
+
+
+### Bug Fixes
+
+* **datasets:** fill the metadata before exporting the database ([4e9fa5e](https://github.com/w4bo/dataset-watering/commit/4e9fa5e023fde4cbb3b425eeef8e0695c4e85cfd))
+
 ## [1.0.4](https://github.com/w4bo/dataset-watering/compare/1.0.3...1.0.4) (2024-04-05)
 
 
