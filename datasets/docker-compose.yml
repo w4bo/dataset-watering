@@ -19,11 +19,12 @@ services:
   oracle:
     hostname: oracle
     container_name: oracle
-    build: dockerimages/oracle11g
+    image: w4bo/oracle11g-java:latest
     environment:
       - ORACLE_DISABLE_ASYNCH_IO=true
       - ORACLE_ALLOW_REMOTE=true
     ports:
-      - "${OUT_ORA1_PORT}:${OUT_ORA1_PORT}"
+      - "${OUT_ORA1_PORT}:1521"
     volumes:
+      - ./oracle11g/:/docker-entrypoint-initdb.d/
       - ./data/:/data

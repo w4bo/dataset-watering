@@ -106,3 +106,156 @@ def get_engine(db_params, type="postgresql"):
         conn_str = "oracle+cx_oracle" + conn_str
     print(conn_str)
     return create_engine(conn_str)
+
+def clean_and_create_metadata(engine):
+    statements = [
+        """DROP TABLE database CASCADE CONSTRAINTS""",
+        """CREATE TABLE database (
+        database_id varchar2(255) NOT NULL,
+        database_name varchar2(255) NOT NULL,
+        IPaddress varchar2(16) NOT NULL,
+        port NUMBER NOT NULL,
+        PRIMARY KEY (database_id),
+        UNIQUE(database_name, IPaddress, port)
+        )""",
+        """DROP TABLE groupbyoperator CASCADE CONSTRAINTS""",
+        """CREATE TABLE groupbyoperator (
+        groupbyoperator_id varchar2(255) NOT NULL,
+        groupbyoperator_name varchar2(255) NOT NULL UNIQUE,
+        groupbyoperator_synonyms varchar2(1000),
+        PRIMARY KEY (groupbyoperator_id)
+        )""",
+        """DROP TABLE hierarchy CASCADE CONSTRAINTS""",
+        """CREATE TABLE hierarchy (
+        hierarchy_id varchar2(255) NOT NULL,
+        hierarchy_name varchar2(255) NOT NULL UNIQUE,
+        hierarchy_synonyms varchar2(1000),
+        PRIMARY KEY (hierarchy_id)
+        )""",
+        """DROP TABLE fact CASCADE CONSTRAINTS""",
+        """CREATE TABLE fact (
+        fact_id varchar2(255) NOT NULL,
+        fact_name varchar2(255) NOT NULL UNIQUE,
+        fact_synonyms varchar2(1000),
+        database_id varchar2(255) NULL REFERENCES database (database_id) ON DELETE CASCADE,
+        PRIMARY KEY (fact_id)
+        )""",
+        """DROP TABLE "TABLE" CASCADE CONSTRAINTS""",
+        """CREATE TABLE "TABLE" (
+        table_id varchar2(255) NOT NULL,
+        table_name varchar2(255) NOT NULL UNIQUE,
+        table_type varchar2(255) NOT NULL,
+        fact_id varchar2(255) DEFAULT NULL REFERENCES fact (fact_id),
+        hierarchy_id varchar2(255) DEFAULT NULL REFERENCES hierarchy (hierarchy_id) ON DELETE CASCADE,
+        PRIMARY KEY (table_id)
+        )""",
+        """DROP TABLE relationship CASCADE CONSTRAINTS""",
+        """CREATE TABLE relationship (
+        relationship_id varchar2(255) NOT NULL,
+        table1 varchar2(255) NOT NULL REFERENCES "TABLE" (table_id) ON DELETE CASCADE,
+        table2 varchar2(255) NOT NULL REFERENCES "TABLE" (table_id) ON DELETE CASCADE,
+        PRIMARY KEY (relationship_id)
+        )""",
+        """DROP TABLE "COLUMN" CASCADE CONSTRAINTS""",
+        """CREATE TABLE "COLUMN" (
+        column_id varchar2(255) NOT NULL,
+        column_name varchar2(255) NOT NULL,
+        column_type varchar2(255) NOT NULL,
+        isKey number(1)  NOT NULL,
+        relationship_id varchar2(255) DEFAULT NULL,
+        table_id varchar2(255) NOT NULL REFERENCES "TABLE"(table_id) ON DELETE CASCADE,
+        PRIMARY KEY (column_id) -- , UNIQUE (column_name, table_id)
+        )""",
+        """DROP TABLE "LEVEL" CASCADE CONSTRAINTS""",
+        """CREATE TABLE "LEVEL" (
+        level_id varchar2(255) NOT NULL,
+        level_type varchar2(255) NOT NULL,
+        level_description varchar2(200),
+        level_name varchar2(255) NOT NULL, -- UNIQUE,
+        cardinality NUMBER DEFAULT NULL,
+        hierarchy_id varchar2(255) NOT NULL REFERENCES "HIERARCHY" (hierarchy_id) ON DELETE CASCADE,
+        level_synonyms varchar2(1000),
+        column_id varchar2(255) NOT NULL REFERENCES "COLUMN"(column_id),
+        "MIN" DOUBLE PRECISION DEFAULT NULL,
+        "MAX" DOUBLE PRECISION DEFAULT NULL,
+        "AVG" DOUBLE PRECISION DEFAULT NULL,
+        isDescriptive NUMBER(1) DEFAULT 0,
+        mindate DATE DEFAULT NULL,
+        maxdate DATE DEFAULT NULL,
+        PRIMARY KEY (level_id)
+        )""",
+        """DROP TABLE hierarchy_in_fact CASCADE CONSTRAINTS""",
+        """CREATE TABLE hierarchy_in_fact (
+        fact_id varchar2(255) NOT NULL REFERENCES fact (fact_id),
+        hierarchy_id varchar2(255) NOT NULL REFERENCES hierarchy (hierarchy_id) ON DELETE CASCADE,
+        PRIMARY KEY (fact_id, hierarchy_id)
+        )""",
+        """DROP TABLE language_predicate CASCADE CONSTRAINTS""",
+        """CREATE TABLE language_predicate (
+        language_predicate_id varchar2(255) NOT NULL,
+        language_predicate_name varchar2(255) NOT NULL UNIQUE,
+        language_predicate_synonyms varchar2(1000) DEFAULT NULL,
+        language_predicate_type varchar2(255) DEFAULT NULL,
+        PRIMARY KEY (language_predicate_id)
+        )""",
+        """DROP TABLE language_operator CASCADE CONSTRAINTS""",
+        """CREATE TABLE language_operator (
+        language_operator_id varchar2(255) NOT NULL,
+        language_operator_name varchar2(255) NOT NULL UNIQUE,
+        language_operator_synonyms varchar2(1000) DEFAULT NULL,
+        language_operator_type varchar2(255) DEFAULT NULL,
+        PRIMARY KEY (language_operator_id)
+        )""",
+        """DROP TABLE measure CASCADE CONSTRAINTS""",
+        """CREATE TABLE measure (
+        measure_id varchar2(255) NOT NULL,
+        measure_name varchar2(255) NOT NULL,
+        fact_id varchar2(255) NOT NULL REFERENCES fact (fact_id),
+        measure_synonyms varchar2(1000),
+        column_id varchar2(255) NOT NULL REFERENCES "COLUMN" (column_id) ON DELETE CASCADE,
+        PRIMARY KEY (measure_id),
+        UNIQUE(measure_name, fact_id)
+        )""",
+        """DROP TABLE member CASCADE CONSTRAINTS""",
+        """CREATE TABLE member (
+        member_id varchar2(255) NOT NULL,
+        member_name varchar2(255) NOT NULL,
+        level_id varchar2(255) NOT NULL REFERENCES "LEVEL" (level_id) ON DELETE CASCADE,
+        member_synonyms varchar2(1000),
+        PRIMARY KEY (member_id),
+        UNIQUE(member_name, level_id)
+        )""",
+        """DROP TABLE groupbyoperator_of_measure CASCADE CONSTRAINTS""",
+        """CREATE TABLE groupbyoperator_of_measure (
+        groupbyoperator_id varchar2(255) NOT NULL REFERENCES groupbyoperator (groupbyoperator_id) ON DELETE CASCADE,
+        measure_id varchar2(255) NOT NULL REFERENCES measure (measure_id) ON DELETE CASCADE,
+        PRIMARY KEY (groupbyoperator_id, measure_id)
+        )""",
+        """DROP TABLE "SYNONYM" CASCADE CONSTRAINTS""",
+        """CREATE TABLE "SYNONYM" (
+        synonym_id varchar2(255) NOT NULL,
+        table_name varchar2(255) NOT NULL,
+        reference_id varchar2(255) NOT NULL,
+        "TERM" varchar2(255) NOT NULL,
+        PRIMARY KEY (synonym_id),
+        UNIQUE(term, reference_id, table_name)
+        )""",
+        """DROP TABLE OLAPSESSION CASCADE CONSTRAINTS""",
+        """CREATE TABLE OLAPSESSION (
+        "TIMESTAMP" NUMBER,
+        session_id varchar2(255),
+        annotation_id varchar2(255),
+        value_en varchar2(1000),
+        value_ita varchar2(1000),
+        limit long,
+        fullquery_serialized blob,
+        fullquery_tree varchar2(1000),
+        olapoperator_serialized blob
+        )"""
+    ]
+    for statement in statements:
+        try:
+            engine.execute(statement)
+        except Exception as e:
+            print(statement)
+            print(e)

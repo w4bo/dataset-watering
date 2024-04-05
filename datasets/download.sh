@@ -2,6 +2,9 @@
 set -exo
 
 cd data
+if [ ! -f "COOL-1.0.109.jar" ]; then 
+    curl -k -o "COOL-1.0.109.jar" -L https://github.com/big-unibo/conversational-olap/releases/download/1.0.109/COOL-all.jar
+fi
 curl -k -o watering_red_20240125T142437.sql https://big.csr.unibo.it/projects/nosql-datasets/watering_red_20240125T142437.sql
 curl -k -o watering-sim_red_20240125T142315.sql https://big.csr.unibo.it/projects/nosql-datasets/watering-sim_red_20240125T142315.sql
 curl -k -o cimice_20240125T142421.sql https://big.csr.unibo.it/projects/nosql-datasets/cimice_20240125T142421.sql
