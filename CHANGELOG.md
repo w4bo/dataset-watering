@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/w4bo/watering-dataset/compare/1.0.2...1.0.3) (2024-03-05)
+
+
+### Bug Fixes
+
+* **cimice:** add dates to the dimension table ([bd1bfab](https://github.com/w4bo/watering-dataset/commit/bd1bfab627768700ffd3eaba161c38bee926981a))
+
 ## [1.0.2](https://github.com/w4bo/watering-dataset/compare/1.0.1...1.0.2) (2024-02-05)
 
 
