@@ -1,3 +1,20 @@
+## [1.0.4](https://github.com/w4bo/dataset-watering/compare/1.0.3...1.0.4) (2024-04-05)
+
+
+### Dependency updates
+
+* **deps:** update node.js to 20.12 ([89f178b](https://github.com/w4bo/dataset-watering/commit/89f178b3c944fa7019b132dccbc7bf612e79a4f1))
+
+
+### Bug Fixes
+
+* **datasets:** generate metedata along with the oracle datasets ([264eb38](https://github.com/w4bo/dataset-watering/commit/264eb389023681afb805729eeda30bfa5119335e))
+
+
+### Build and continuous integration
+
+* **deps:** update actions/setup-python action to v5.1.0 ([43f1e07](https://github.com/w4bo/dataset-watering/commit/43f1e07fcc5c4ca8d16e5e38fe9b444453c257c5))
+
 ## [1.0.3](https://github.com/w4bo/watering-dataset/compare/1.0.2...1.0.3) (2024-03-05)
 
 
