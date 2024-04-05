@@ -12,6 +12,7 @@ pwd.txt
 **/src/main/java/it/unibo/antlr/gen/*
 **/dump-*.sh
 **/libs/*
+**/data/cimice-dataset
 !**/libs/.dummy
 !f01_oracle_init.sql
 .ready
