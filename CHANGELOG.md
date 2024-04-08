@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/w4bo/dataset-watering/compare/1.0.5...1.0.6) (2024-04-08)
+
+
+### Bug Fixes
+
+* **cimice:** dump cimice_dt_crop table ([f6209e5](https://github.com/w4bo/dataset-watering/commit/f6209e5b674db260a2062c86fec7b4ed026ddfd9))
+
 ## [1.0.5](https://github.com/w4bo/dataset-watering/compare/1.0.4...1.0.5) (2024-04-05)
 
 
