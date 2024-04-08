@@ -35,7 +35,7 @@ services:
       - "${MONGO_PORT}:27017"
   
   orion:
-    image: fiware/orion:3.10.1
+    image: fiware/orion:3.11.0
     ports:
       - "1026:1026"
     command: -corsOrigin __ALL -dbhost mongodb -inReqPayloadMaxSize 5000000
