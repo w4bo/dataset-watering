@@ -15,7 +15,7 @@ with open('dump-clean-pg.sh', 'w') as f:
     f.write('export PGPASSWORD={}\n'.format(config['OUT_PWD']))
     f.write((
                 'pg_dump -h {host} -d {db} -U {user} -O -x -t dt_agent -t dt_field -t dt_time -t ft_measurement -f /data/measurement-dfm_$T.sql\n' +
-                'pg_dump -h {host} -d {db} -U {user} -O -x -t cimice_ft_captures -t cimice_dt_trap -t cimice_dt_time -f /data/cimice-dfm_$T.sql\n'
+                'pg_dump -h {host} -d {db} -U {user} -O -x -t cimice_ft_captures -t cimice_dt_trap -t cimice_dt_time -t cimice_dt_crop -f /data/cimice-dfm_$T.sql\n'
             ).format(host=config['OUT_HOST'], db=config['OUT_DB'], user=config['OUT_USER']))
 
 with open('dump-clean-ora.sh', 'w') as f:
