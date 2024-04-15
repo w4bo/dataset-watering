@@ -62,8 +62,10 @@ def ext_date(dt):
     dt['year'] = dt[t].dt.year
     dt['month_in_year'] = dt[t].dt.month
     dt['month'] = dt[t].dt.strftime('%Y-%m')
-    dt['week_in_year'] = dt[t].dt.isocalendar().week
-    dt['week'] = dt.apply(lambda x: '{}-{}'.format(x["year"], x["week_in_year"]), axis=1)
+    # dt['week_in_year'] = dt[t].dt.isocalendar().week
+    dt['week_in_year'] = dt[t].dt.strftime('%W').astype("int32")
+    dt['week'] = dt[t].dt.strftime('%Y-%W')
+    
     dt["hour_in_day"] = dt[t].dt.hour.astype("int32")
     dt["hour"] = dt[t].dt.strftime('%Y-%m-%d %H:00:00')
 
