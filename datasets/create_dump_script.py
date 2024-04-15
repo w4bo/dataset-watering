@@ -23,6 +23,6 @@ with open('dump-clean-ora.sh', 'w') as f:
     f.write('export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe\nexport PATH=$PATH:$ORACLE_HOME/bin\n')
     for i in [1, 2]: 
         f.write((
-                'java -cp /data/COOL-1.0.109.jar it.unibo.conversational.database.DBreader --dbms oracle --user {user} --pwd {pwd} --ip {host} --port {port} --db {db} --ft {ft}\n'
+                'java -cp /data/COOL-1.0.112.jar it.unibo.conversational.database.DBreader --dbms oracle --user {user} --pwd {pwd} --ip {host} --port {port} --db {db} --ft {ft}\n'
                 'expdp {user}/{pwd}@{host}:{port}/{db} directory=oracle_dump dumpfile={user}-dfm_$T.dmp SCHEMAS={user}\n'
             ).format(user=config[f'OUT_ORA{i}_USER'], host=config[f'OUT_ORA{i}_HOST'], port=config[f'OUT_ORA{i}_PORT'], pwd=config[f'OUT_ORA{i}_PWD'], db=config[f'OUT_ORA{i}_DB'], ft=config[f'OUT_ORA{i}_FT']))

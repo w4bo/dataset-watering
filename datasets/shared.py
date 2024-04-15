@@ -55,19 +55,20 @@ def compute_json(df, df_all, cols):
     return df
 
 def ext_date(dt):
-    dt['timestamp'] = pd.to_datetime(dt['timestamp'], unit='s')
-    dt['datetime'] = dt['timestamp']
-    dt['date'] = dt['timestamp'].dt.strftime('%Y-%m-%d') # .dt.date 
-    dt['year'] = dt['timestamp'].dt.year
-    dt['month_in_year'] = dt['timestamp'].dt.month
-    dt['month'] = dt['timestamp'].dt.strftime('%Y-%m')
-    dt['week_in_year'] = dt['timestamp'].dt.isocalendar().week
+    t = 'timestamp'
+    dt['timestamp'] = pd.to_datetime(dt[t], unit='s')
+    dt['datetime'] = dt[t]
+    dt['date'] = dt[t].dt.strftime('%Y-%m-%d') # .dt.date 
+    dt['year'] = dt[t].dt.year
+    dt['month_in_year'] = dt[t].dt.month
+    dt['month'] = dt[t].dt.strftime('%Y-%m')
+    dt['week_in_year'] = dt[t].dt.isocalendar().week
     dt['week'] = dt.apply(lambda x: '{}-{}'.format(x["year"], x["week_in_year"]), axis=1)
+    dt["hour_in_day"] = dt[t].dt.hour.astype("int32")
+    dt["hour"] = dt[t].dt.strftime('%Y-%m-%d %H:00:00')
 
 def extend_df(sdf, owner, project):
     ext_date(sdf)
-    sdf["hour_in_day"] = sdf["datetime"].dt.hour
-    sdf["hour"] = sdf["timestamp"].dt.strftime('%Y-%m-%d %H:00:00')
     sdf["timestampReceived"] = sdf["timestamp"]
     sdf["delay"] = sdf["timestampReceived"] - sdf["timestamp"] 
     sdf["province"] = "FE"
@@ -111,7 +112,7 @@ def get_engine(db_params, type="postgresql"):
     print(conn_str)
     return create_engine(conn_str)
 
-def clean_and_create_metadata(engine):
+def clean_and_create_metadata(engine, drop_only=False):
     statements = [
         """DROP TABLE database CASCADE CONSTRAINTS""",
         """CREATE TABLE database (
@@ -259,6 +260,7 @@ def clean_and_create_metadata(engine):
     ]
     for statement in statements:
         try:
+            if drop_only and "DROP" not in statement: continue
             engine.execute(statement)
         except Exception as e:
             print(statement)

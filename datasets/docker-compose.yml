@@ -16,9 +16,9 @@ services:
       - ./data/:/docker-entrypoint-initdb.d/
       - ./data/:/data
 
-  oracle:
-    hostname: oracle
-    container_name: oracle
+  oracledb:
+    hostname: oracledb
+    container_name: oracledb
     image: w4bo/oracle11g-java:latest
     environment:
       - ORACLE_DISABLE_ASYNCH_IO=true
