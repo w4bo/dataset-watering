@@ -1,3 +1,15 @@
+## [1.0.7](https://github.com/w4bo/dataset-watering/compare/1.0.6...1.0.7) (2024-04-15)
+
+
+### Dependency updates
+
+* **deps:** update fiware/orion docker tag to v3.11.0 ([adc8ba6](https://github.com/w4bo/dataset-watering/commit/adc8ba641953cb77bc41afb55f8bbced01acdfd4))
+
+
+### Bug Fixes
+
+* **datasets:** fix dt_time, generate missing dates ([c89580c](https://github.com/w4bo/dataset-watering/commit/c89580c41bc119bf4c51fdd229967c9c39934e7e))
+
 ## [1.0.6](https://github.com/w4bo/dataset-watering/compare/1.0.5...1.0.6) (2024-04-08)
 
 
