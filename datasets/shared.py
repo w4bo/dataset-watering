@@ -16,7 +16,7 @@ out_db_params = {
 
 standard_tables = {
     "dt_field": {"col": ["field", "province", "region", "country"]},
-    "dt_time": {"col": ["timestamp", "datetime", "hour", "date", "month", "year", "week", "week_in_year"]},
+    "dt_time": {"col": ["timestamp", "datetime", "hour", "hour_in_day", "date", "month", "month_in_year", "year", "week", "week_in_year"]},
     "dt_agent": {"col": ["agent", "agentType", "agentHier"]},
     "ft_measurement": {"col": ["agent", "type", "field", "owner", "project", "timestamp", "value", "delay"]},
 }
@@ -54,16 +54,20 @@ def compute_json(df, df_all, cols):
         df["rawJSON"] = df_all[list(set(jso) & set(list(df_all.columns)))].apply(lambda row: row_to_json(row), axis=1)
     return df
 
+def ext_date(dt):
+    dt['timestamp'] = pd.to_datetime(dt['timestamp'], unit='s')
+    dt['datetime'] = dt['timestamp']
+    dt['date'] = dt['timestamp'].dt.strftime('%Y-%m-%d') # .dt.date 
+    dt['year'] = dt['timestamp'].dt.year
+    dt['month_in_year'] = dt['timestamp'].dt.month
+    dt['month'] = dt['timestamp'].dt.strftime('%Y-%m')
+    dt['week_in_year'] = dt['timestamp'].dt.isocalendar().week
+    dt['week'] = dt.apply(lambda x: '{}-{}'.format(x["year"], x["week_in_year"]), axis=1)
+
 def extend_df(sdf, owner, project):
-    sdf["datetime"] = pd.to_datetime(sdf["timestamp"], unit="s")
-    sdf["date"] = sdf["datetime"].dt.date
-    sdf["month"] = sdf["datetime"].dt.month
-    sdf["year"] = sdf["datetime"].dt.year
-    sdf["month"] = sdf.apply(lambda x: "{}-{}".format(x["year"], x["month"]), axis=1)
-    sdf["hour"] = sdf["datetime"].dt.hour
-    sdf["hour"] = sdf.apply(lambda x: "{} {}:00:00".format(x["date"], x["hour"]), axis=1)
-    sdf['week'] = sdf["datetime"].dt.isocalendar().week
-    sdf['week_in_year'] = sdf.apply(lambda x: '{}-{}'.format(x["year"], x["week"]), axis=1)
+    ext_date(sdf)
+    sdf["hour_in_day"] = sdf["datetime"].dt.hour
+    sdf["hour"] = sdf["timestamp"].dt.strftime('%Y-%m-%d %H:00:00')
     sdf["timestampReceived"] = sdf["timestamp"]
     sdf["delay"] = sdf["timestampReceived"] - sdf["timestamp"] 
     sdf["province"] = "FE"
