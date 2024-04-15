@@ -59,6 +59,7 @@ def ext_date(dt):
     dt['timestamp'] = pd.to_datetime(dt[t], unit='s')
     dt['datetime'] = dt[t]
     dt['date'] = dt[t].dt.strftime('%Y-%m-%d') # .dt.date 
+    dt['day'] = dt[t].dt.strftime('%Y-%m-%d') # Oracle refuses to use date as a column name in queries 
     dt['year'] = dt[t].dt.year
     dt['month_in_year'] = dt[t].dt.month
     dt['month'] = dt[t].dt.strftime('%Y-%m')
