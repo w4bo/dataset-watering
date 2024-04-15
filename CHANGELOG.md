@@ -1,3 +1,11 @@
+## [1.0.8](https://github.com/w4bo/dataset-watering/compare/1.0.7...1.0.8) (2024-04-15)
+
+
+### Bug Fixes
+
+* **datasets:** fix hour type and creation of metadata ([f0dfa7a](https://github.com/w4bo/dataset-watering/commit/f0dfa7aa710960e0b185feb86879e7086aed7e0f))
+* **datasets:** use %W for week ([af96f82](https://github.com/w4bo/dataset-watering/commit/af96f8279d1d61e0b26f92c3a1941e3ed95aa5eb))
+
 ## [1.0.7](https://github.com/w4bo/dataset-watering/compare/1.0.6...1.0.7) (2024-04-15)
 
 
