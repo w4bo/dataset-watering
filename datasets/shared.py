@@ -17,8 +17,9 @@ out_db_params = {
 standard_tables = {
     "dt_field": {"col": ["field", "province", "region", "country"]},
     "dt_time": {"col": ["timestamp", "datetime", "hour", "hour_in_day", "date", "month", "month_in_year", "year", "week", "week_in_year"]},
-    "dt_agent": {"col": ["agent", "agentType", "agentHier"]},
-    "ft_measurement": {"col": ["agent", "type", "field", "owner", "project", "timestamp", "value", "delay"]},
+    "dt_agent": {"col": ["agent", "agent_type", "agentHier"]},
+    "dt_measure": {"col": ["measurement_type"]},
+    "ft_measurement": {"col": ["agent", "measurement_type", "field", "owner", "project", "timestamp", "value"]}, # , "delay" 
 }
 
 def get_connection(db_params):
@@ -72,23 +73,23 @@ def ext_date(dt):
 
 def extend_df(sdf, owner, project):
     ext_date(sdf)
-    sdf["timestampReceived"] = sdf["timestamp"]
-    sdf["delay"] = sdf["timestampReceived"] - sdf["timestamp"] 
+    # sdf["timestampReceived"] = sdf["timestamp"]
+    # sdf["delay"] = sdf["timestampReceived"] - sdf["timestamp"] 
     sdf["province"] = "FE"
     sdf["region"] = "ER"
     sdf["country"] = "IT"
     sdf["owner"] = owner
     sdf["project"] = project
-    sdf["agentType"] = sdf.apply(lambda x: get_agent_type(x["type"], x), axis=1)
-    sdf["agent"] = sdf.apply(lambda x: x["agentType"] + "-" + x["field"].split('-')[1], axis=1)
-    sdf["agentHier"] = sdf.apply(lambda x: get_agent_hier(x["type"], x), axis=1)
-    sdf["type-ext"] = sdf.apply(lambda x: get_meas_type(x["type"], x), axis=1)
+    sdf["agent_type"] = sdf.apply(lambda x: get_agent_type(x["measurement_type"], x), axis=1)
+    sdf["agent"] = sdf.apply(lambda x: x["agent_type"] + "-" + x["field"].split('-')[1], axis=1)
+    sdf["agentHier"] = sdf.apply(lambda x: get_agent_hier(x["measurement_type"], x), axis=1)
+    sdf["type-ext"] = sdf.apply(lambda x: get_meas_type(x["measurement_type"], x), axis=1)
 
 def get_agent_type(s, x):
     if s == "DRIPPER":
         return "Dripper"
     elif s in ["GROUND_WATER_POTENTIAL", "GRND_WATER_G", "GROUND_SATURATION_DEGREE"]:
-        return "Sensor-({},{},{})".format(x["x"], x["y"], x["z"]).replace("nan", "0").replace(".0", "")
+        return "Sensor-{}_{}_{}".format(abs(x["x"]), abs(x["y"]), abs(x["z"])).replace("nan", "0").replace(".0", "")
     elif s in ["SOLAR_RAD", "AIR_HUM", "WIND_DIRECTION", "AIR_TEMP", "WIND_GUST_MAX", "PLUV_CURR", "WIND_SPEED"]:
         return "WeatherStation"
     else:
@@ -102,7 +103,7 @@ def get_agent_hier(s, x):
 
 def get_meas_type(s, x):
     if s in ["GROUND_WATER_POTENTIAL", "GRND_WATER_G", "GROUND_SATURATION_DEGREE"]:
-        return "{}-({},{},{})".format(x["type"], x["x"], x["y"], x["z"]).replace("nan", "0").replace("nan", "0").replace(".0", "")
+        return "{}-({},{},{})".format(x["measurement_type"], x["x"], x["y"], x["z"]).replace("nan", "0").replace("nan", "0").replace(".0", "")
     else:
         return s
 
