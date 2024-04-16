@@ -1,3 +1,10 @@
+## [1.0.9](https://github.com/w4bo/dataset-watering/compare/1.0.8...1.0.9) (2024-04-15)
+
+
+### Bug Fixes
+
+* **datasets:** add the day attribute ([042fddc](https://github.com/w4bo/dataset-watering/commit/042fddcbfe0b374c12d39915a38a03e6d96f5367))
+
 ## [1.0.8](https://github.com/w4bo/dataset-watering/compare/1.0.7...1.0.8) (2024-04-15)
 
 
