@@ -1,3 +1,11 @@
+## [1.0.10](https://github.com/w4bo/dataset-watering/compare/1.0.9...1.0.10) (2024-04-17)
+
+
+### Bug Fixes
+
+* **watering:** fix duplicates ([2450faf](https://github.com/w4bo/dataset-watering/commit/2450fafe15c78b928cdf09516a33cc80dcbdd9ef))
+* **watering:** use measurement_type and not type ([a25e12b](https://github.com/w4bo/dataset-watering/commit/a25e12b8bc8e15e72b433e1ca42c5cdb2a62ba2d))
+
 ## [1.0.9](https://github.com/w4bo/dataset-watering/compare/1.0.8...1.0.9) (2024-04-15)
 
 
