@@ -17,10 +17,36 @@ out_db_params = {
 standard_tables = {
     "dt_field": {"col": ["field", "province", "region", "country"]},
     "dt_time": {"col": ["timestamp", "datetime", "hour", "hour_in_day", "date", "month", "month_in_year", "year", "week", "week_in_year"]},
-    "dt_agent": {"col": ["agent", "agent_type", "agentHier"]},
+    "dt_agent": {"col": ["agent", "agent_hier"]},
     "dt_measure": {"col": ["measurement_type"]},
     "ft_measurement": {"col": ["agent", "measurement_type", "field", "owner", "project", "timestamp", "value"]}, # , "delay" 
 }
+
+def extend_dates(df, column='timestamp', freq='h'):
+    sdate = df[column].min() 
+    edate = df[column].max()
+    mydt = pd.DataFrame({column: pd.date_range(sdate, edate, freq=freq)})
+    mydt = pd.merge(df, mydt, on=column, how='outer')
+    ext_date(mydt)
+    return mydt
+
+def read_and_update(tablename, df, engine):
+    df = df.drop_duplicates()
+    #try:
+    #    tdf = pd.read_sql_table(tablename, engine).drop_duplicates()
+    #    # df = df.append(tdf, ignore_index=True)
+    #    # Find rows in df1 that are not in df2 
+    #    # df = pd.concat([df.drop_duplicates(), tdf]).drop_duplicates(keep=False)
+    #    df1_reset = tdf.reset_index(drop=True)
+    #    df2_reset = df.reset_index(drop=True)
+    #    # Find added rows
+    #    df = df2_reset[~df2_reset.isin(df1_reset).all(axis=1)]
+    #except Exception as e:
+    #    print(e)
+    try:
+        df.to_sql(tablename, engine, if_exists='append', index=False)
+    except Exception as e:
+        print(e)
 
 def get_connection(db_params):
     # Connect to PostgreSQL server
@@ -80,16 +106,15 @@ def extend_df(sdf, owner, project):
     sdf["country"] = "IT"
     sdf["owner"] = owner
     sdf["project"] = project
-    sdf["agent_type"] = sdf.apply(lambda x: get_agent_type(x["measurement_type"], x), axis=1)
-    sdf["agent"] = sdf.apply(lambda x: x["agent_type"] + "-" + x["field"].split('-')[1], axis=1)
-    sdf["agentHier"] = sdf.apply(lambda x: get_agent_hier(x["measurement_type"], x), axis=1)
-    sdf["type-ext"] = sdf.apply(lambda x: get_meas_type(x["measurement_type"], x), axis=1)
+    sdf["agent"] = sdf.apply(lambda x: get_agent_type(x["measurement_type"], x), axis=1)
+    sdf["agent_hier"] = sdf.apply(lambda x: get_agent_hier(x["measurement_type"], x), axis=1)
+    sdf["type_ext"] = sdf.apply(lambda x: get_meas_type(x["measurement_type"], x), axis=1)
 
 def get_agent_type(s, x):
     if s == "DRIPPER":
         return "Dripper"
     elif s in ["GROUND_WATER_POTENTIAL", "GRND_WATER_G", "GROUND_SATURATION_DEGREE"]:
-        return "Sensor-{}_{}_{}".format(abs(x["x"]), abs(x["y"]), abs(x["z"])).replace("nan", "0").replace(".0", "")
+        return "Sensor-{}_{}_{}".format(x["x"], x["y"], x["z"]).replace("nan", "0").replace(".0", "")
     elif s in ["SOLAR_RAD", "AIR_HUM", "WIND_DIRECTION", "AIR_TEMP", "WIND_GUST_MAX", "PLUV_CURR", "WIND_SPEED"]:
         return "WeatherStation"
     else:
