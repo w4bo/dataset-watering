@@ -4,7 +4,7 @@ services:
     init: true
     hostname: postgis
     container_name: postgis
-    image: postgis/postgis:16-3.4
+    image: postgis/postgis:17-3.4
     restart: always
     environment:
       - POSTGRES_USER=root
