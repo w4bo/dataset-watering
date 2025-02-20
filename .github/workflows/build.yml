@@ -33,6 +33,10 @@ jobs:
           python create_dump_script.py
           chmod +x *.sh
           ./dump.sh
+      - name: Install Node
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version-file: package.json
       - name: Release
         run: |
           cd .. 
