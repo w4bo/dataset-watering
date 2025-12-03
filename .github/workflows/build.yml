@@ -34,7 +34,7 @@ jobs:
           chmod +x *.sh
           ./dump.sh
       - name: Install Node
-        uses: actions/setup-node@v6.0.0
+        uses: actions/setup-node@v6.1.0
         with:
           node-version-file: package.json
       - name: Release
